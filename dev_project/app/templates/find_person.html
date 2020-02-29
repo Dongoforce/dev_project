@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+    <head>
+        <meta charset="utf-8">
+        <title>Найти работника по имени и фамилии</title>
+    </head>
+    <body>
+    <!-- Upload form. Note enctype attribute! -->
+    <form method="POST" class="post-form">{% csrf_token %}
+		{{ form.as_p }}
+		<button type="submit" class="save btn btn-default">Найти</button>
+	</form>
+    <div>
+        {% for user in users %}
+            <h2> {{ user.name }} {{ user.surname }}, {{ user.birth_date }}, {{ user.position }}</h2>
+        {%endfor%}
+    </div>
+    </body>
+{% endblock %}
