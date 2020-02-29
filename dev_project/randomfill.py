@@ -3,7 +3,7 @@ import random
 
 fake = faker.Faker(['ru_RU'])
 jobs = ["Assistant", "Developer", "Destroyer", "Communist"]
-with open("Generated.csv", "w") as file:
+with open("Generated.csv", "w", encoding="utf-8") as file:
     file.write("name,surname,birth_date,position\n")
     for _ in range(500):
         date = fake.date_of_birth()
