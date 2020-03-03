@@ -18,11 +18,11 @@ def find_person(request):
         if form.is_valid():
             person = form.cleaned_data['person'].split(" ")
             try:
-                users = User.objects.filter(name__iexact=person[0])
-                users = users.filter(surname__iexact=person[1])
+                users = User.objects.filter(name__iexact=person[0], surname__iexact=person[1])
             except:
-                messages.error(request, 'Введите имя и фамилию')
-                return render(request, 'find_person.html', {'form': form, 'users': []})
+                users = User.objects.filter(name__iexact=person[0])
+                if len(users) == 0:
+                    users = User.objects.filter(surname__iexact=person[0])
             return render(request, 'find_person.html', {'form': form, 'users': users})
     else:
         form = FindUser()
