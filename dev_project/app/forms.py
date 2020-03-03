@@ -10,5 +10,5 @@ class UploadFileForm(forms.Form):
 
 class FindUser(forms.Form):
     person = forms.CharField(
-        label="Введите Имя и Фамилию для поиска"
+        label="Введите Имя и/или Фамилию для поиска"
     )
