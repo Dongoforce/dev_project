@@ -5,6 +5,13 @@
         <title>Найти работника по имени и фамилии</title>
     </head>
     <body>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     <!-- Upload form. Note enctype attribute! -->
     <form method="POST" class="post-form">{% csrf_token %}
 		{{ form.as_p }}
