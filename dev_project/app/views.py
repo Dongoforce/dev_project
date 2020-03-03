@@ -5,9 +5,9 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 from .models import User
+from errors import errors
 
 
-# Create your views here.
 def main_page(request):
     return render(request, 'main_page.html')
 
@@ -17,8 +17,12 @@ def find_person(request):
         form = FindUser(request.POST)
         if form.is_valid():
             person = form.cleaned_data['person'].split(" ")
-            users = User.objects.filter(name__iexact=person[0])
-            users = users.filter(surname__iexact=person[1])
+            try:
+                users = User.objects.filter(name__iexact=person[0])
+                users = users.filter(surname__iexact=person[1])
+            except:
+                messages.error(request, 'Введите имя и фамилию')
+                return render(request, 'find_person.html', {'form': form, 'users': []})
             return render(request, 'find_person.html', {'form': form, 'users': users})
     else:
         form = FindUser()
@@ -31,11 +35,15 @@ def import_data(request):
         if form.is_valid():
             csv_file = request.FILES['file']
             if not csv_file.name.endswith(".csv"):
-                messages.error('Вы загрузили не csv файл')
+                messages.error(request, 'Вы загрузили не csv файл')
                 return HttpResponseRedirect(reverse('import_data'))
             else:
-                csv_parser(csv_file)
-            return HttpResponseRedirect('/')
+                error = csv_parser(csv_file)
+                if error:
+                    messages.error(request, str(list(errors.keys())[list(errors.values()).index(error)]))
+                    return HttpResponseRedirect('/import_data')
+                else:
+                    return HttpResponseRedirect('/')
     else:
         form = UploadFileForm()
     return render(request, 'import_data.html', {'form': form})
