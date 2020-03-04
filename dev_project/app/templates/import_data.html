@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+    <head>
+        <meta charset="utf-8">
+        <title>Загрузка данных пользователем</title>
+    </head>
+
+    <body>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <!-- Upload form. Note enctype attribute! -->
+    <form action="{% url 'import_data' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>{{ form.non_field_errors }}</p>
+
+        <p>{{ form.file.label_tag }} {{ form.file.help_text }}</p>
+
+        <p>
+            {{ form.file.errors }}
+            {{ form.file }}
+        </p>
+
+        <p><input type="submit" value="Загрузить"/></p>
+    </form>
+    </body>
+
+{% endblock %}

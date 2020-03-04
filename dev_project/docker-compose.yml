@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  app_cont:
+    build: .
+    command: gunicorn --access-logfile - --bind :8000 backend.wsgi:application
+    volumes:
+      - /static:/static
+    networks:
+      - nginx-network
+      - postgres-network
+    environment:
+      - ENV_FILE=.env.prod
+    depends_on:
+      - postgres_db
+    ports:
+      - "8000:8000"
+
+  postgres_db:
+    image: postgres:latest
+    env_file:
+      - postgres.env
+    networks:
+      - postgres-network
+    ports:
+      - "5432:5432"
+
+  nginx:
+      build: ./nginx
+      ports:
+        - "8080:80"
+      depends_on:
+        - app_cont
+      volumes:
+        - /static:/static
+      networks:
+        - nginx-network
+      expose:
+        - "8080"
+
+networks:
+  nginx-network:
+    driver: bridge
+  postgres-network:
+    driver: bridge
+
+volumes:
+  static_volume:
