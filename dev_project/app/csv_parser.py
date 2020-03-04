@@ -37,7 +37,7 @@ def csv_parser(file):
             try:
                 birth_date_user = datetime.datetime.strptime(row_list[header_indexes[2]], "%Y-%m-%d").date()
             except:
-                return errors['WRONG birth_data']
+                return errors['WRONG birth_date']
 
             name_user = row_list[header_indexes[0]]
             surname_user = row_list[header_indexes[1]]
